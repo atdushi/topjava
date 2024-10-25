@@ -2,8 +2,8 @@ package ru.javawebinar.topjava.repository.jpa;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import javax.persistence.EntityManager;
@@ -21,11 +21,7 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
-//        if (meal.getUser().getId() != userId) {
-//            return null;
-//        }
-        Assert.isTrue(meal.getUser().getId() == userId, "UserId doesn't match");
-
+        meal.setUser(em.getReference(User.class, userId));
         if (meal.isNew()) {
             em.persist(meal);
             return meal;
