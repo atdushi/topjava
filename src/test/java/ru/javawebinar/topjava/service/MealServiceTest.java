@@ -31,6 +31,8 @@ public class MealServiceTest {
     @Autowired
     private MealService service;
 
+    MatcherFactory.Matcher<Object> matcher = MatcherFactory.usingIgnoringFieldsComparator("user");
+
     @Test
     public void delete() {
         service.delete(MEAL1_ID, USER_ID);
@@ -53,7 +55,7 @@ public class MealServiceTest {
         int newId = created.id();
         Meal newMeal = getNew();
         newMeal.setId(newId);
-        MatcherFactory.Matcher<Object> matcher = MatcherFactory.usingIgnoringFieldsComparator("user");
+
         matcher.assertMatch(created, newMeal);
         matcher.assertMatch(service.get(newId, USER_ID), newMeal);
     }
@@ -67,7 +69,7 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
-        MEAL_MATCHER.assertMatch(actual, adminMeal1);
+        matcher.assertMatch(actual, adminMeal1);
     }
 
     @Test
@@ -84,18 +86,18 @@ public class MealServiceTest {
     public void update() {
         Meal updated = getUpdated();
         service.update(updated, USER_ID);
-        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdated());
+        matcher.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdated());
     }
 
     @Test
     public void updateNotOwn() {
         assertThrows(NotFoundException.class, () -> service.update(meal1, ADMIN_ID));
-        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), meal1);
+        matcher.assertMatch(service.get(MEAL1_ID, USER_ID), meal1);
     }
 
     @Test
     public void getAll() {
-        MEAL_MATCHER.assertMatch(service.getAll(USER_ID), meals);
+        matcher.assertMatch(service.getAll(USER_ID), meals);
     }
 
     @Test
@@ -108,6 +110,6 @@ public class MealServiceTest {
 
     @Test
     public void getBetweenWithNullDates() {
-        MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
+        matcher.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
     }
 }
