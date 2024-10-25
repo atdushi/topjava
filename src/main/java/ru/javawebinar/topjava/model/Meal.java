@@ -8,7 +8,8 @@ import java.time.LocalTime;
 
 @NamedQueries({
         @NamedQuery(name = Meal.ALL_SORTED, query = "SELECT m FROM Meal m LEFT JOIN FETCH m.user WHERE m.user.id=?1 ORDER BY m.dateTime DESC"),
-        @NamedQuery(name = Meal.BETWEEN_HALF_OPEN, query = "SELECT m FROM Meal m LEFT JOIN FETCH m.user WHERE m.dateTime BETWEEN ?1 and ?2 ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.BETWEEN_HALF_OPEN, query =
+                "SELECT m FROM Meal m LEFT JOIN FETCH m.user WHERE m.dateTime >= ?1 and m.dateTime < ?2 and m.user.id=?3 ORDER BY m.dateTime DESC"),
 })
 @Entity
 @Table(name = "meal")
